@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: Adderlin
+      POSTGRES_DB: Delivery
+    ports:
+      - "5432:5432"  # Exponer el puerto de PostgreSQL para acceso desde la PC local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistencia de datos de Postgres
+      - ./mis_archivos:/docker_compartido        # Volumen compartido entre el host y el contenedor
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com    # Usuario de pgAdmin
+      PGADMIN_DEFAULT_PASSWORD: admin           # Contraseña de pgAdmin
+    ports:
+      - "8080:80"  # Exponer pgAdmin en el puerto 8080 de tu máquina local
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin           # Persistencia de configuración de pgAdmin
+    restart: unless-stopped
+    depends_on:
+      - postgres   # Asegurar que PostgreSQL se inicie antes de pgAdmin
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local

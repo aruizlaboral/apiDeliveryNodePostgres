@@ -1,0 +1,46 @@
+Agrega el SDK de Firebase
+--------------------------------------------------------------------------------------------------------------------------------
+----------------------------Usar npm
+--------------------------------------------------------------------------------------------------------------------------------
+npm install firebase
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB1qDnJ0x2SZdeRihP8DPZhcTHCHelKlIo",
+  authDomain: "delivery-b9284.firebaseapp.com",
+  projectId: "delivery-b9284",
+  storageBucket: "delivery-b9284.appspot.com",
+  messagingSenderId: "776000880684",
+  appId: "1:776000880684:web:2e33102856827109bf5189"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+--------------------------------------------------------------------------------------------------------------------------------
+----------------------------Usar una etiqueta <script>
+--------------------------------------------------------------------------------------------------------------------------------
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyB1qDnJ0x2SZdeRihP8DPZhcTHCHelKlIo",
+    authDomain: "delivery-b9284.firebaseapp.com",
+    projectId: "delivery-b9284",
+    storageBucket: "delivery-b9284.appspot.com",
+    messagingSenderId: "776000880684",
+    appId: "1:776000880684:web:2e33102856827109bf5189"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
