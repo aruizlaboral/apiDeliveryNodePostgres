@@ -1,8 +1,8 @@
-// controller.js
+// uploadController.js
 const bucket = require('./firebase-config').bucket;
 const { v4: uuidv4 } = require('uuid');
 
-exports.uploadFile = async (req, res) => {
+exports.uploadFile = async (req, res, next) => {
   try {
     if (!req.file) {
       return res.status(400).send('No se proporcionó ningún archivo.');
@@ -25,8 +25,10 @@ exports.uploadFile = async (req, res) => {
 
     blobStream.on('finish', async () => {
       await fileUpload.makePublic();
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-      res.status(200).send({ publicUrl });
+      req.publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+      //Siguiente uploadController.uploadFile es otro middleware
+      // userController.updateUserUrl
+      next();
     });
 
     blobStream.end(file.buffer);

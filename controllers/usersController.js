@@ -28,41 +28,15 @@ module.exports= {
 
     async registerWithImage(req, res, next) {
         try {
- 
-                    if (!req.file) {
-                        return res.status(400).send('No se proporcionó ningún archivo.');
-                    }
-                    //DATOS DE ARCHIVO
-                    const file = req.file;
-                    const fileName = `${uuidv4()}_${file.originalname}`;
-                    const fileUpload = bucket.file(fileName);
-                
-                    const blobStream = fileUpload.createWriteStream({
-                        metadata: {
-                        contentType: file.mimetype,
-                        },
-                    });
-                    
-                    blobStream.on('error', (error) => {
-                        console.error('Error al subir el archivo:', error);
-                        res.status(500).send('Error al subir el archivo.');
-                    });
-
-                    blobStream.on('finish', async () => {
-                        await fileUpload.makePublic();
-                        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-                        const user = req.body;
-                        user.image = publicUrl;
-                        const data = await User.create(user);
-                        await Rol.create(data.id, 1); // ROL POR DEFECTO (CLIENTE)
-                                    return res.status(201).json({
-                                        success: true,
-                                        message: 'El registro se realizo correctamente, ahora inicia sesion',
-                                        data: data.id
-                                    });
-
-                    });
-                    blobStream.end(file.buffer); 
+            const user = req.body;
+            user.image = req.publicUrl;
+            const data = await User.create(user);
+                await Rol.create(data.id, 1); // ROL POR DEFECTO (CLIENTE)
+                    return res.status(201).json({
+                        success: true,
+                        message: 'El registro se realizo correctamente, ahora inicia sesion',
+                        data: data.id
+                        });
   
         }
         catch (error) {
