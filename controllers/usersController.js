@@ -4,7 +4,7 @@ const User = require('../models/users');
 const Rol = require('../models/rol');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
-//const storage = require('../utils/cloud_storage.js');
+const storage = require('../utils/cloud_storage.js');
 
 const bucket = require('../utils/firebase-config').bucket;
 const { v4: uuidv4 } = require('uuid');
@@ -27,26 +27,28 @@ module.exports= {
     },
 
     async registerWithImage(req, res, next) {
-        try {
-            const user = req.body;
-            user.image = req.publicUrl;
-            const data = await User.create(user);
-                await Rol.create(data.id, 1); // ROL POR DEFECTO (CLIENTE)
-                    return res.status(201).json({
-                        success: true,
-                        message: 'El registro se realizo correctamente, ahora inicia sesion',
-                        data: data.id
-                        });
-  
-        }
-        catch (error) {
-            console.log(`Error: ${error}`);
-            return res.status(501).json({
-                success: false,
-                message: 'Hubo un error con el registro del usuario, Con imagen',
-                error: error
-            });
-        }
+        storage.uploadFile(req, res, async () => {
+            try {
+                const user = req.body;
+                user.image = req.publicUrl;
+                const data = await User.create(user);
+                    await Rol.create(data.id, 1); // ROL POR DEFECTO (CLIENTE)
+                        return res.status(201).json({
+                            success: true,
+                            message: 'El registro se realizo correctamente, ahora inicia sesion',
+                            data: data.id
+                            });
+    
+            }
+            catch (error) {
+                console.log(`Error: ${error}`);
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con el registro del usuario, Con imagen',
+                    error: error
+                });
+            }
+        });
     },
   
 
