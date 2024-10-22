@@ -26,6 +26,25 @@ module.exports= {
         }
     },
 
+    async findById(req,res,next){
+        try {
+            const id=req.params.id;
+
+
+            // el await espera a terminar para pasar a la sigueinte linea de codigo
+            const data= await User.findbyUserId(id);
+            //console.log(` `);
+            console.log(`Usuario:${data}`);
+            return res.status(201).json(data);
+        } catch (error) {
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success:false,
+                messague:  "Error al obtener los usuarios Por Id"
+            });
+        }
+    },
+
     async registerWithImage(req, res, next) {
         storage.uploadFile(req, res, async () => {
             try {
@@ -50,8 +69,33 @@ module.exports= {
             }
         });
     },
-  
 
+    async update(req, res, next) {
+        storage.uploadFile(req, res, async () => {
+            try {
+                const user = req.body;
+                console.log( `Datos enviasos del Usuario:: ${User}`);
+                console.log(`Datos enviados del usuario: ${JSON.stringify(user)}`);
+                user.image = req.publicUrl;
+
+                User.update(user);
+                return res.status(201).json({
+                        success: true,
+                        message: 'El registro de datos Usuario se actualizado correctamente',
+                        });
+    
+            }
+            catch (error) {
+                console.log(`Error: ${error}`);
+                return res.status(501).json({
+                    success: false,
+                    message: 'Hubo un error con el Actualizar usuario, Con imagen',
+                    error: error
+                });
+            }
+        });
+    },
+  
 
     async register(req,res,next){
         try {
@@ -124,7 +168,7 @@ module.exports= {
                 }
                 //await User.updateToken(myUser.id, `JWT ${token}`);
                 console.log(`USUARIO ENVIADO, LOGEADO: ${data}`);
-
+                await User.updateToken(myUser.id, `JWT ${token}`);
 
                 return res.status(201).json({
                     success: true,

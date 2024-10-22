@@ -7,14 +7,20 @@ module.exports =  (app) => {
 // module.exports =  (app, upload) => {
 
     app.get('/api/users/getAll', UsersController.getAll);
-
-    //app.post('/api/users/create', upload.single('image'), UsersController.registerWithImage);
+    app.get('/api/users/findById/:id', UsersController.findById);
+   
+    
     app.post('/api/users/create', upload.single('image'), UsersController.registerWithImage);
     //app.post('/api/users/create', upload.single('image'), cloudstorage.uploadFile, UsersController.registerWithImage);
     //app.post('/api/users/create', UsersController.register);
-    //app.get('/api/users/:id', UsersController.getUserById);
+
+
 
     app.post('/api/users/login', UsersController.login);
+
+    ///ACTUALIZACION DE DATOS
+    app.put('/api/users/update',upload.single('image'), UsersController.update);
+
 }
 
 
