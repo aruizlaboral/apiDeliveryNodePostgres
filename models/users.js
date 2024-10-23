@@ -176,8 +176,6 @@ User.update = (user) => {
 }
 
 
-
-
 User.isPasswordMatched = (userPassword, hash) => {
     const myPasswordHashed = crypto.createHash('md5').update(userPassword).digest('hex');
     if (myPasswordHashed === hash) {

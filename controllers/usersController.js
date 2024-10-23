@@ -135,7 +135,6 @@ module.exports= {
             }
 
             if (User.isPasswordMatched(password, myUser.password)) {
-
                 // Datos del payload que quieres firmar
                 const payload = {
                     id: myUser.id,
@@ -144,18 +143,13 @@ module.exports= {
                   
                 // Opciones adicionales para el token (opcional)
                 const options = {
-                expiresIn: '1h' // Expiración del token
+                // expiresIn: '1h'     // 1 HORA Expiración del token
+                expiresIn: (60*60*24)   // 1 HORA
                 };
                 
                 const token = jwt.sign(payload, keys.secretOrKey, options);
                 console.log('Generated Token:', token);               
-                /*
-                const token = jwt.sign({id: myUser.id, email: myUser.email}, keys.secretOrKey, {
-                     expiresIn: (60*60*24) // 1 HORA
-                    // expiresIn: (60 * 3) // 2 MINUTO
-                });
-                */
-            
+        
                 const data = {
                     id: myUser.id,
                     name: myUser.name,
@@ -194,6 +188,25 @@ module.exports= {
             });
         }
     },
+
+    async logout(req, res, next) {
+        try {
+            const id =req.body.id;
+            await User.updateToken(id,null);
+            return res.status(201).json({
+                success: false,
+                message: 'la session dle Usuario se ha cerrado, Correctamente',
+            });
+
+        }catch (error) {
+            console.log(`Error: ${error}`);
+            return res.status(501).json({
+                success: false,
+                message: 'Error al momento de hacer cierre Session',
+                error: error
+            });
+        }
+    }
 
 };
 
